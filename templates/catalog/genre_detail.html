@@ -2,10 +2,10 @@
 
 {% block content %}
 
-<h1>Genre: {{ genre.name }}</h1>
+<h1>Gênero: {{ genre.name }}</h1>
 
 <div style="margin-left:20px;margin-top:20px">
-<h4>Books in genre</h4>
+<h4>Livros no gênero</h4>
 
 <ul>
   {% for copy in genre.book_set.all %}
@@ -13,12 +13,11 @@
     <a href="{{ copy.get_absolute_url }}">{{ copy.title }}</a> ({{copy.author}})
   </li>
   {% empty %}
-  <li>There are no books in this genre.</li>
+  <li>Não há livros neste gênero.</li>
   {% endfor %}
 </ul>
 
 {% endblock %}
-
 
 {% block sidebar %}
   {{ block.super }}
@@ -27,10 +26,10 @@
   <hr>
   <ul class="sidebar-nav">
     {% if perms.catalog.change_genre %}
-    <li><a href="{% url 'genre-update' genre.id %}">Update Genre</a></li>
+    <li><a href="{% url 'genre-update' genre.id %}">Atualizar Gênero</a></li>
     {% endif %}
     {% if not genre.book_set.all and perms.catalog.delete_genre %}
-      <li><a href="{% url 'genre-delete' genre.id %}">Delete Genre</a></li>
+      <li><a href="{% url 'genre-delete' genre.id %}">Excluir Gênero</a></li>
     {% endif %}
     </ul>
   {% endif %}

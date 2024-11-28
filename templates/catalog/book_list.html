@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Book List</h1>
+  <h1>Lista de Livros</h1>
   {% if book_list %}
     <ul>
       {% for book in book_list %}
@@ -11,16 +11,16 @@
       {% endfor %}
     </ul>
   {% else %}
-    <p>There are no books in the library.</p>
+    <p>Não há livros na biblioteca.</p>
   {% endif %}
   
   {% for book_instance in book_instances %}
     <div class="book-instance">
-        <p>{{ book_instance.book.title }} - Due back: {{ book_instance.due_back }}</p>
+        <p>{{ book_instance.book.title }} - Devolução prevista: {{ book_instance.due_back }}</p>
         
         {% if user == book_instance.borrower %}
             <!-- Botão de renovação -->
-            <a href="{% url 'renew-book' pk=book_instance.pk %}" class="btn btn-primary">Renew</a>
+            <a href="{% url 'renew-book' pk=book_instance.pk %}" class="btn btn-primary">Renovar</a>
         {% endif %}
     </div>
   {% endfor %}

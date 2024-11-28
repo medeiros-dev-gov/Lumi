@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Emprestar Livro</h1>
+  
+  <form method="post" action="{% url 'borrow-book' %}">
+    {% csrf_token %}
+    <label for="book">Escolha um livro:</label>
+    <select name="book" id="book" required>
+      {% for book in books %}
+        <option value="{{ book.id }}">{{ book.title }} ({{ book.author }})</option>
+      {% endfor %}
+    </select>
+
+    <label for="due_back">Data de devolução:</label>
+    <input type="date" name="due_back" id="due_back" min="{{ date.today }}" required>
+    
+    <button type="submit">Emprestar</button>
+  </form>
+{% endblock %}

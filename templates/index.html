@@ -1,32 +1,29 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<h1>Local Library Home</h1>
+<h1>lumi</h1>
 
-<p>Welcome to <em>LocalLibrary</em>, a very basic Django website developed as a <a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Tutorial_local_library_website">tutorial example</a> on the Mozilla Developer Network.</p>
-<p>The tutorial demonstrates how to create a Django skeleton website and application, define URL mappings, views (including Generic List and Detail Views), models and templates.</p>
+<p>Bem-vindo ao <em>LocalLibrary</em>, um site básico em Django desenvolvido como um exemplo de <a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Tutorial_local_library_website">tutorial</a> na Mozilla Developer Network.</p>
+<p>O tutorial demonstra como criar um site e uma aplicação Django básicos, definir mapeamentos de URL, views (incluindo Generic List e Detail Views), modelos e templates.</p>
 
-
-<h2>UML Models</h2>
-<p>An UML diagram of the site's Django model structure is shown below. </p>
+<h2>Modelos UML</h2>
+<p>O diagrama UML da estrutura do modelo Django do site é mostrado abaixo.</p>
 
 <div>
 {% load static %}
 <img src="{% static 'catalog/images/biblioteca.jpg' %}" alt="Biblioteca" width="600px">
 </div>  
 
+<h2>Conteúdo Dinâmico</h2>
 
-<h2>Dynamic content</h2>
-
-<p>The library has the following record counts:</p>
+<p>A biblioteca possui os seguintes contadores de registros:</p>
 <ul>
-<li><strong>Books:</strong> {{ num_books }}</li>
-<li><strong>Copies:</strong> {{ num_instances }}</li>
-<li><strong>Copies available:</strong> {{ num_instances_available }}</li>
-<li><strong>Authors:</strong> {{ num_authors }}</li>
+<li><strong>Livros:</strong> {{ num_books }}</li>
+<li><strong>Cópias:</strong> {{ num_instances }}</li>
+<li><strong>Cópias disponíveis:</strong> {{ num_instances_available }}</li>
+<li><strong>Autores:</strong> {{ num_authors }}</li>
 </ul>
 
-
-<p>You have visited this page {{ num_visits }} time{{ num_visits|pluralize }}.</p>
+<p>Você visitou esta página {{ num_visits }} vez{{ num_visits|pluralize }}.</p>
 
 {% endblock %}

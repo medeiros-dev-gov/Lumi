@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h1>Book Copies in Library</h1>
+    <h1>Cópias de Livros na Biblioteca</h1>
 
     <ul>
       {% for bookinst in bookinstance_list %}
@@ -9,11 +9,11 @@
         <a href="{% url 'bookinstance-detail' bookinst.pk %}">{{bookinst.book.title}}</a> ({{ bookinst.get_status_display }})
         {% if bookinst.status != 'a' %}: {{ bookinst.due_back }} {% endif %}
         {% if bookinst.status == 'o' %}
-          {% if user.is_staff %}- {{ bookinst.borrower }}{% endif %} {% if perms.catalog.can_mark_returned %}- <a href="{% url 'renew-book-librarian' bookinst.id %}">Renew</a> {% endif %}
+          {% if user.is_staff %}- {{ bookinst.borrower }}{% endif %} {% if perms.catalog.can_mark_returned %}- <a href="{% url 'renew-book-librarian' bookinst.id %}">Renovar</a> {% endif %}
         {% endif %}
       </li>
       {% empty %}
-      <li>There are no book copies available.</li>
+      <li>Não há cópias de livros disponíveis.</li>
       {% endfor %}
     </ul>
 

@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import redirect, render
 
 # Create your views here.
@@ -271,20 +272,31 @@ def renew_book(request, pk):
 # views.py
 
 @login_required
-def borrow_book(request, pk):
-    """Marca o livro como emprestado para o usuário logado."""
-    book_instance = get_object_or_404(BookInstance, pk=pk)
+def borrow_book(request):
+    if request.method == 'POST':
+        book_id = request.POST.get('book')
+        due_back = request.POST.get('due_back')
+        
+        # Verifica se o livro existe e está disponível
+        book = get_object_or_404(Book, id=book_id)
+        book_instance = BookInstance.objects.filter(book=book, status='a').first()
 
-    # Verificar se o livro já está emprestado
-    if book_instance.status == 'o':  # O status 'o' indica que está emprestado
-        return redirect('book_already_borrowed')
+        if not book_instance:
+            messages.error(request, "Este livro não está disponível no momento.")
+            return redirect('borrow-book')
 
-    # Atualizar o status e o 'borrower'
-    book_instance.status = 'o'  # 'o' significa que o livro está emprestado
-    book_instance.borrower = request.user  # Atualiza com o usuário logado
-    book_instance.save()
+        # Atualiza o status e associa ao usuário
+        book_instance.status = 'o'
+        book_instance.borrower = request.user
+        book_instance.due_back = due_back
+        book_instance.save()
 
-    return redirect('my-borrowed')
+        messages.success(request, f"Você emprestou o livro '{book.title}'!")
+        return redirect('my-borrowed')
+    
+    # Exibe os livros disponíveis
+    books = Book.objects.filter(bookinstance__status='a').distinct()
+    return render(request, 'catalog/borrow_book.html', {'books': books})
 
 
 @login_required

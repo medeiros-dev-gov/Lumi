@@ -2,17 +2,17 @@
 
 {% block content %}
 
-<h1>BookInstance: {{ bookinstance.book.title }}</h1>
+<h1>Instância do Livro: {{ bookinstance.book.title }}</h1>
 
-<p><strong>Author:</strong> <a href="{{ bookinstance.book.author.get_absolute_url }}">{{ bookinstance.book.author }}</a></p>
+<p><strong>Autor:</strong> <a href="{{ bookinstance.book.author.get_absolute_url }}">{{ bookinstance.book.author }}</a></p>
 
-<p><strong>Imprint:</strong> {{ bookinstance.imprint }}</p>
-<p><strong>Status:</strong> {{ bookinstance.get_status_display }} {% if bookinstance.status != 'a' %} (Due: {{bookinstance.due_back}}){% endif %}</p>
+<p><strong>Impressão:</strong> {{ bookinstance.imprint }}</p>
+<p><strong>Status:</strong> {{ bookinstance.get_status_display }} {% if bookinstance.status != 'a' %} (Devolução: {{bookinstance.due_back}}){% endif %}</p>
 
 <hr>
 <ul>
   <li>
-    <a href="{{ bookinstance.book.get_absolute_url }}">All copies</a></p>
+    <a href="{{ bookinstance.book.get_absolute_url }}">Todas as cópias</a></p>
   </li>
 </ul>
 {% endblock %}
@@ -25,10 +25,10 @@
   <hr>
   <ul class="sidebar-nav">
     {% if perms.catalog.change_bookinstance %}
-      <li><a href="{% url 'bookinstance-update' bookinstance.id %}">Update BookInstance</a></li>
+      <li><a href="{% url 'bookinstance-update' bookinstance.id %}">Atualizar Instância do Livro</a></li>
     {% endif %}
     {% if perms.catalog.delete_bookinstance %}
-      <li><a href="{% url 'bookinstance-delete' bookinstance.id %}">Delete BookInstance</a></li>
+      <li><a href="{% url 'bookinstance-delete' bookinstance.id %}">Excluir Instância do Livro</a></li>
     {% endif %}
   </ul>
   {% endif %}

@@ -24,7 +24,7 @@ urlpatterns = [
 # Adicionando configurações de URL para a visualização dos livros emprestados pelo usuário
 urlpatterns += [
     path('my-borrowed/', views.my_borrowed_books, name='my-borrowed'),
-    path(r'borrowed/', views.LoanedBooksAllListView.as_view(), name='all-borrowed'),
+    path('borrow-book/', views.borrow_book, name='borrow-book'),
 ]
 
 # URLConf para o bibliotecário renovar um livro

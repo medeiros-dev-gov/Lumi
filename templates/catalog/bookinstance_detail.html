@@ -15,8 +15,19 @@
     <a href="{{ bookinstance.book.get_absolute_url }}">Todas as cópias</a></p>
   </li>
 </ul>
-{% endblock %}
 
+<h1>Detalhes do Empréstimo</h1>
+
+<p><strong>Livro:</strong> {{ bookinstance.book.title }}</p>
+<p><strong>Data de Devolução:</strong> {{ bookinstance.due_back }}</p>
+
+<!-- Formulário para renovação -->
+<form action="{% url 'renew-book' bookinstance.pk %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Renovar Empréstimo</button>
+</form>
+
+{% endblock %}
 
 {% block sidebar %}
   {{ block.super }}

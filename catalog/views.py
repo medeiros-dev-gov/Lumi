@@ -1,3 +1,4 @@
+from uuid import UUID
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
@@ -113,7 +114,7 @@ from django.urls import reverse
 import datetime
 from django.contrib.auth.decorators import login_required, permission_required
 from catalog.forms import RenewBookForm
-
+from django.contrib import messages
 
 @login_required
 @permission_required('catalog.can_mark_returned', raise_exception=True)
@@ -121,22 +122,19 @@ def renew_book_librarian(request, pk):
     """View function for renewing a specific BookInstance by librarian."""
     book_instance = get_object_or_404(BookInstance, pk=pk)
 
-    # If this is a POST request then process the Form data
+    # If this is a POST request, then process the form data
     if request.method == 'POST':
-
-        # Create a form instance and populate it with data from the request (binding):
         form = RenewBookForm(request.POST)
-
-        # Check if the form is valid:
+        
         if form.is_valid():
-            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
             book_instance.due_back = form.cleaned_data['renewal_date']
             book_instance.save()
 
-            # redirect to a new URL:
+            # Add success message
+            messages.success(request, f"Book renewed successfully. New due date: {book_instance.due_back}")
+            
             return HttpResponseRedirect(reverse('all-borrowed'))
 
-    # If this is a GET (or any other method) create the default form
     else:
         proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
         form = RenewBookForm(initial={'renewal_date': proposed_renewal_date})
@@ -265,11 +263,30 @@ class BookInstanceDelete(PermissionRequiredMixin, DeleteView):
     permission_required = 'catalog.delete_bookinstance'
 
 
-def renew_book(request, pk):
-    # lógica para renovar o livro
-    return HttpResponse('Livro renovado com sucesso!')
 
-# views.py
+def renew_book(request, pk):
+    try:
+        book_instance = BookInstance.objects.get(id=UUID(pk))
+    except BookInstance.DoesNotExist:
+        # Trate o erro aqui, se o livro não for encontrado
+        pass
+    # Continue o processamento...
+    book_instance = get_object_or_404(BookInstance, pk=pk)
+
+    # Verifica se o usuário tem permissão (opcional, mas recomendado)
+    if book_instance.borrower != request.user:
+        messages.error(request, "Você não tem permissão para renovar este livro.")
+        return redirect('my-borrowed')
+
+    # Verifica se o livro pode ser renovado
+    if book_instance.can_renew():
+        book_instance.renew()
+        messages.success(request, "Empréstimo renovado com sucesso!")
+    else:
+        messages.error(request, "Você não pode renovar este livro. Limite de renovações atingido.")
+
+    # Redireciona para a página de livros emprestados
+    return redirect('my-borrowed')
 
 @login_required
 def borrow_book(request):
@@ -301,6 +318,5 @@ def borrow_book(request):
 
 @login_required
 def my_borrowed_books(request):
-    """View para listar os livros emprestados pelo usuário atual."""
-    borrowed_books = BookInstance.objects.filter(borrower=request.user, status='o').order_by('due_back')
+    borrowed_books = BookInstance.objects.filter(borrower=request.user)
     return render(request, 'catalog/my_borrowed_books.html', {'borrowed_books': borrowed_books})

@@ -1,3 +1,4 @@
+import datetime
 from pyexpat.errors import messages
 from django.db import models
 from django.shortcuts import get_object_or_404, redirect
@@ -8,6 +9,8 @@ from django.conf import settings  # Required to assign User as a borrower
 import uuid
 from datetime import date, timedelta, timezone
 from django.contrib.auth.models import User
+from django.utils import timezone
+
 
 
 class Genre(models.Model):
@@ -157,6 +160,18 @@ class BookInstance(models.Model):
             self.borrower = None
             self.due_back = None
             self.save()
+    
+    renewal_count = models.PositiveIntegerField(default=0)
+    
+    def can_renew(self):
+        return self.renewal_count < 3 
+    
+    def can_be_renewed(self):
+        if not self.due_back:  # Check if 'due_back' is None
+            return False  # If it's None, we can't renew it
+    
+    # If due_back is not None, continue with your logic
+        return self.due_back > timezone.now().date()  # Use timezone.now().date() instead of datetime.now()
 
 def renew_book(request, pk):
     """Renews the loan of a specific book."""

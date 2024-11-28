@@ -5,11 +5,15 @@
 
   <p>Data de devolução atual: {{ book_instance.due_back }}</p>
 
-  <form method="POST">
+  <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Renovar</button>
+    <div class="form-group">
+      <label for="renewal_date">Renewal Date:</label>
+      <input type="date" id="renewal_date" name="renewal_date" class="form-control" value="{{ form.renewal_date.value|date:'Y-m-d' }}" min="{{ today }}" max="{{ max_renewal_date }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Renew</button>
   </form>
+  
 
   <a href="{% url 'all-borrowed' %}">Voltar para a lista de livros emprestados</a>
 {% endblock %}

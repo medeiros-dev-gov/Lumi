@@ -1,0 +1,13 @@
+{% if borrowed_books %}
+    <ul>
+        {% for book in borrowed_books %}
+            <li>
+                <strong>Title:</strong> {{ book.book.title }}<br>
+                <strong>Due back:</strong> {{ book.due_back }}<br>
+                <strong>Status:</strong> {{ book.get_status_display }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You have no borrowed books.</p>
+{% endif %}

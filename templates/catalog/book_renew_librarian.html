@@ -1,0 +1,15 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h1>Renovar Livro: {{ book_instance.book.title }}</h1>
+
+  <p>Data de devolução atual: {{ book_instance.due_back }}</p>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Renovar</button>
+  </form>
+
+  <a href="{% url 'all-borrowed' %}">Voltar para a lista de livros emprestados</a>
+{% endblock %}

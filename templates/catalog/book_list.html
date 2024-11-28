@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Book List</h1>
+  {% if book_list %}
+    <ul>
+      {% for book in book_list %}
+        <li>
+          <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{ book.author }})
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>There are no books in the library.</p>
+  {% endif %}
+  
+  {% for book_instance in book_instances %}
+    <div class="book-instance">
+        <p>{{ book_instance.book.title }} - Due back: {{ book_instance.due_back }}</p>
+        
+        {% if user == book_instance.borrower %}
+            <!-- Botão de renovação -->
+            <a href="{% url 'renew-book' pk=book_instance.pk %}" class="btn btn-primary">Renew</a>
+        {% endif %}
+    </div>
+  {% endfor %}
+
+{% endblock %}

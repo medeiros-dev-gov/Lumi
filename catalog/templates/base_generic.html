@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Virtual Library{% endblock %}</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Merriweather:wght@400;700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <header class="text-center">
+    <h1 class="display-4">VIRTUAL LIBRARY</h1>
+    <p class="lead">Aventure-se em um universo de livros com nossa biblioteca virtual</p>
+  </header>
+  <div class="container-fluid mt-5">
+    <div class="row">
+      <aside class="col-sm-2">
+        <nav class="sidebar-nav">
+          <ul>
+            <li><a href="{% url 'index' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
+            <li><a href="{% url 'books' %}" class="{% if request.path == '/books/' %}active{% endif %}">All Books</a>
+            </li>
+            <li><a href="{% url 'author-list' %}" class="{% if request.path == '/authors/' %}active{% endif %}">All Authors</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="col-sm-10">
+        {% block content %}
+        {% endblock %}
+
+        {% block pagination %}
+        {% if is_paginated %}
+        <div class="pagination">
+          <span class="page-links">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+            <span class="page-current">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            {% endif %}
+          </span>
+        </div>
+        {% endif %}
+        {% endblock %}
+      </main>
+    </div>
+  </div>
+</body>
+
+</html>

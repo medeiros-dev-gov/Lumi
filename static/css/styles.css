@@ -1,72 +1,151 @@
-/* Reset básico para remover margens e preenchimentos padrão */
-body, h1, h2, p, ul, li {
+/* Configuração global */
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Definindo a fonte padrão e a cor do texto */
 body {
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-  color: #333;
-  background-color: #ffffff;
+  font-family: "Rasa", serif;
+  background-color: rgb(254, 255, 255);
+  color: black;
+}
+
+/* Estrutura principal */
+.main-container {
+  display: flex;
+}
+
+/* Barra lateral fixa */
+.vertical-nav {
+  position: fixed;
+  top: 250px; /* Ajuste da posição para descer um pouco */
+  margin-left: 20px;
+  width: 250px;
+  height: 100vh; /* altura total da tela */
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
 }
 
-/* Estilo para o cabeçalho principal */
-h1 {
-  color: #333;
-  font-size: 2em;
-  margin-bottom: 10px;
-}
-
-/* Estilo para subtítulos */
-h2 {
-  color: #555;
-  font-size: 1.5em;
-  margin-bottom: 10px;
-}
-
-/* Estilo para parágrafos */
-p {
-  margin-bottom: 15px;
-}
-
-/* Estilo para listas */
-ul {
+.vertical-nav ul {
   list-style-type: none;
   padding: 0;
+  margin-left: -30px;
+  margin-top: 10px;
 }
 
-li {
+.vertical-nav li {
   margin-bottom: 10px;
 }
 
-/* Estilo para links */
-a {
+.vertical-nav a {
+  color: rgb(0, 0, 0);
   text-decoration: none;
-  color: #007bff;
+  font-size: x-large;
+  padding: 10px;
+  display: block;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
-a:hover {
-  text-decoration: underline;
+.vertical-nav a:hover {
+  background-color: #3d5d8c;
+  border-radius: 80px;
+  margin-left: 7px;
 }
 
-/* Estilo para imagens */
-img {
-  max-width: 100%;
-  height: auto;
-  border: 1px solid #ddd;
-  margin: 20px 0;
-}
-
-/* Estilo para o conteúdo principal */
-.container {
-  max-width: 900px;
-  margin: 0 auto;
+/* Conteúdo principal */
+.content {
+  margin-left: 250px; /* Espaço para a barra lateral */
   padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Barra de navegação secundária */
+.navbar2 {
+  margin-left: -80%;
+  background-color: #3d5d8c;
+  font-size: xxx-large;
+  color: white;
+  padding: 45px;
+  border-radius: 80px;
+  margin-bottom: 20px;
+  text-decoration: none;
+  text-align: center;
+}
+
+/* Cards */
+.card-maior {
+  margin-top: 42px;
+  margin-left: -150px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 524px;
+  height: 520px;
+  padding: 20px;
+  background: #fff;
+  color: #000;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card .title {
+  font-size: 1.8em; /* Aumentando o tamanho da fonte */
+  font-weight: bold; /* Mais destacado */
+  color: #333; /* Cor de texto mais suave para contraste */
+  margin-bottom: 15px; /* Distância maior do resto do conteúdo */
+  text-align: center; /* Garante que o título fique centralizado */
+  line-height: 1.2; /* Melhor legibilidade */
+}
+
+.card .price {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #000;
+}
+
+.card .description {
+  font-size: 1.2em; /* Ajustando o tamanho para não ficar muito grande */
+  color: rgba(0, 0, 0, 0.7);
+  margin-top: 15px;
+  text-align: justify;
+}
+
+.card button {
+  background-color: #3d5d8c;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: larger;
+}
+
+.card button:hover {
+  background-color: #2b455e;
+}
+
+
+/* Imagem dentro do card */
+img {
+  width: 100%;
+  height: auto;
+  max-width: 210px;
 }

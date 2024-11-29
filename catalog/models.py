@@ -81,7 +81,11 @@ class Book(models.Model):
                             help_text='13 Character ISBN number')
     genre = models.ManyToManyField(Genre, help_text="Select a genre for this book")
     language = models.ForeignKey('Language', on_delete=models.SET_NULL, null=True)
+    image = models.ImageField(upload_to='book_images/', null=True, blank=True)  # Campo de imagem
 
+    def __str__(self):
+        return self.title
+    
     class Meta:
         ordering = ['title', 'author']
 

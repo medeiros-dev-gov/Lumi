@@ -1,0 +1,67 @@
+/* Configuração global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Rasa", serif;
+    background-color: rgb(254, 255, 255);
+    color: black;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Lista de livros */
+.book-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Card de cada livro */
+.book-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.book-card h3 {
+    font-size: 1.4em;
+    font-weight: 900;
+    color: #3d5d8c;
+    margin-bottom: 10px;
+}
+
+.book-card p {
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.book-card .reserve-btn {
+    background-color: #3d5d8c;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    font-size: 1.1em;
+}
+
+.book-card .reserve-btn:hover {
+    background-color: #2b455e;
+    transform: scale(1.05);
+}

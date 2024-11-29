@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Author, Genre, Book, BookInstance, Language
-
+from django.utils.html import mark_safe
 # Registrando os modelos para o admin
 admin.site.register(Genre)
 admin.site.register(Language)
@@ -30,14 +30,15 @@ class BooksInstanceInline(admin.TabularInline):
 
 
 class BookAdmin(admin.ModelAdmin):
-    """Administração para o modelo Book.
-    Define:
-     - campos para exibição na visualização de lista (list_display)
-     - adiciona instâncias de livros como inserção inline na visualização de livro (inlines)
-    """
-    list_display = ('title', 'author', 'display_genre')
-    inlines = [BooksInstanceInline]
+    list_display = ('title', 'author', 'image_tag')  # Use o método 'image_tag' em vez do campo direto
+    search_fields = ('title', 'author')
 
+    def image_tag(self, obj):
+        if obj.image:
+            return mark_safe(f'<img src="{obj.image.url}" width="50" height="50" />')
+        return 'Sem imagem'
+
+    image_tag.short_description = 'Imagem'
 
 admin.site.register(Book, BookAdmin)
 

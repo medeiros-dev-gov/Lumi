@@ -1,5 +1,7 @@
 from django.urls import path, register_converter
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 # Conversor UUID
 class UUIDConverter:
@@ -64,4 +66,4 @@ urlpatterns = [
 
     # URL para renovar livro do bibliotecário
     path('catalog/renew-book/<uuid:pk>/', views.renew_book, name='renew-book'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

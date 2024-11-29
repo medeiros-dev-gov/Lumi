@@ -29,8 +29,8 @@
       <ul class="sidebar-nav mt-4">
         {% if user.is_authenticated %}
           <li><strong>Usuário:</strong> {{ user.get_username }}</li>
-          <li><a href="{% url 'borrow-book' %}">Emprestar um livro</a></li>
-          <li><a href="{% url 'my-borrowed' %}">Meus Empréstimos</a></li>
+          <li><a href="{% url 'borrow-book' %}">Emprestar</a></li>
+          <li><a href="{% url 'my-borrowed' %}">Emprestados</a></li>
           <li>
             <form id="logout-form" method="post" action="{% url 'logout' %}">
               {% csrf_token %}

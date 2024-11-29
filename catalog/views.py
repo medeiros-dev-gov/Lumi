@@ -320,3 +320,7 @@ def borrow_book(request):
 def my_borrowed_books(request):
     borrowed_books = BookInstance.objects.filter(borrower=request.user)
     return render(request, 'catalog/my_borrowed_books.html', {'borrowed_books': borrowed_books})
+
+def listar_livros(request):
+    livros = Book.objects.all()  # Certifique-se de estar buscando todos os livros.
+    return render(request, 'nome_do_template.html', {'livros': livros})

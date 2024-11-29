@@ -14,15 +14,20 @@ body {
 /* Estrutura principal */
 .main-container {
   display: flex;
+  justify-content: flex-start; /* Alinha os itens à esquerda */
+  flex-wrap: wrap; /* Permite que os itens se ajustem quando não cabem */
+  gap: 20px; /* Espaçamento entre os cards */
+  padding: 20px;
+  margin-left: 250px; /* Garantir que o conteúdo não sobreponha a barra lateral */
 }
 
 /* Barra lateral fixa */
 .vertical-nav {
   position: fixed;
-  top: 250px; /* Ajuste da posição para descer um pouco */
+  top: 250px;
   margin-left: 20px;
   width: 250px;
-  height: 100vh; /* altura total da tela */
+  height: 100vh;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -56,32 +61,31 @@ body {
   margin-left: 7px;
 }
 
-/* Conteúdo principal */
-.content {
-  margin-left: 250px; /* Espaço para a barra lateral */
-  padding: 20px;
-}
-
 /* Barra de navegação secundária */
 .navbar2 {
   margin-left: -80%;
   background-color: #3d5d8c;
-  font-size: xxx-large;
+  font-size: xx-large;
   color: white;
   padding: 45px;
   border-radius: 80px;
+  margin-top: 30px;
   margin-bottom: 20px;
   text-decoration: none;
   text-align: center;
+
+    & h1{
+      margin-left: 150px;
+    }
 }
+
+
 
 /* Cards */
 .card-maior {
-  margin-top: 42px;
-  margin-left: -150px;
   display: flex;
-  gap: 20px;
   flex-wrap: wrap;
+  gap: 20px; /* Espaço entre os cards */
 }
 
 .card {
@@ -89,7 +93,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  width: 524px;
+  width: 30%; /* Garantir que cada card ocupe 1/3 da largura */
   height: 520px;
   padding: 20px;
   background: #fff;
@@ -106,12 +110,12 @@ body {
 }
 
 .card .title {
-  font-size: 1.8em; /* Aumentando o tamanho da fonte */
-  font-weight: bold; /* Mais destacado */
-  color: #333; /* Cor de texto mais suave para contraste */
-  margin-bottom: 15px; /* Distância maior do resto do conteúdo */
-  text-align: center; /* Garante que o título fique centralizado */
-  line-height: 1.2; /* Melhor legibilidade */
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .card .price {
@@ -121,7 +125,7 @@ body {
 }
 
 .card .description {
-  font-size: 1.2em; /* Ajustando o tamanho para não ficar muito grande */
+  font-size: 1.2em;
   color: rgba(0, 0, 0, 0.7);
   margin-top: 15px;
   text-align: justify;
@@ -141,7 +145,6 @@ body {
 .card button:hover {
   background-color: #2b455e;
 }
-
 
 /* Imagem dentro do card */
 img {

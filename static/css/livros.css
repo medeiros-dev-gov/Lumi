@@ -1,67 +1,106 @@
-/* Configuração global */
+/* Configuração Global */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-body {
+  }
+  
+  body {
     font-family: "Rasa", serif;
-    background-color: rgb(254, 255, 255);
-    color: black;
-    line-height: 1.6;
-    padding: 20px;
-}
-
-/* Lista de livros */
-.book-list {
+    background-color: #fefefe;
+    color: #000;
+  }
+  
+  /* Estrutura Principal */
+  .main-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
     justify-content: center;
-}
-
-/* Card de cada livro */
-.book-card {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    gap: 20px;
     padding: 20px;
+  }
+  
+  /* Barra de Navegação */
+  .navbar2 {
+    background-color: #3d5d8c;
+    color: #fff;
+    font-size: xx-large;
+    border-radius: 80px;
+    padding: 45px;
+    margin-bottom: 20px;
+    text-decoration: none;
+  }
+  
+  /* Cards */
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     width: 300px;
+    padding: 20px;
+    background: #fff;
+    color: #000;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.book-card:hover {
+    margin-bottom: 20px;
+  }
+  
+  .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-}
-
-.book-card h3 {
-    font-size: 1.4em;
-    font-weight: 900;
-    color: #3d5d8c;
-    margin-bottom: 10px;
-}
-
-.book-card p {
-    font-size: 1.1em;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .card .title {
+    font-size: 1.5em;
+    font-weight: bold;
     color: #333;
-    margin-bottom: 15px;
-}
-
-.book-card .reserve-btn {
+    margin-bottom: 10px;
+  }
+  
+  .card .description {
+    font-size: 1em;
+    color: rgba(0, 0, 0, 0.7);
+    margin: 10px 0;
+    text-align: justify;
+  }
+  
+  .card button {
     background-color: #3d5d8c;
     color: #fff;
     border: none;
     padding: 10px 20px;
-    border-radius: 25px;
+    border-radius: 15px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-    font-size: 1.1em;
-}
-
-.book-card .reserve-btn:hover {
+    transition: background-color 0.3s;
+  }
+  
+  .card button:hover {
     background-color: #2b455e;
-    transform: scale(1.05);
-}
+  }
+  
+  /* Imagem no Card */
+  img.book-cover {
+    width: 150px;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .main-container {
+      padding: 10px;
+    }
+  
+    .card {
+      width: 100%;
+    }
+  
+    .navbar2 {
+      font-size: 1.5rem;
+    }
+  }
+  

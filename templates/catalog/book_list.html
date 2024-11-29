@@ -1,55 +1,40 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="pt">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumi Livros</title>
-    <link rel="stylesheet" href="livros.css">
-</head>
 
-<body>
-
-    <div class="content">
-        <div class="navbar2">
-            Livros disponíveis
-        </div>
-
-        <div class="main-container">
-            <div class="card-maior">
-                {% if book_list %}
-                    {% for book in book_list %}
-                    <div class="card">
-                        <div class="content">
-                            <div class="title">{{ book.title }}</div>
-                            <img src="{{ book.image_url.url }}" alt="Capa de {{ book.title }}" class="book-cover">
-                            <div class="description">
-                                <p>{{ book.description }}</p>
-                                <p>Autor: {{ book.author }}</p>
-                            </div>
-                        </div>
-                        <button>Reservar</button>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <p>Não há livros na biblioteca.</p>
-                {% endif %}
-            </div>
-
-            {% for book_instance in book_instances %}
-                <div class="book-instance">
-                    <p>{{ book_instance.book.title }} - Devolução prevista: {{ book_instance.due_back }}</p>
-                    {% if user == book_instance.borrower %}
-                    <a href="{% url 'renew-book' pk=book_instance.pk %}" class="btn btn-primary">Renovar</a>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        </div>
+<div class="content">
+    <div class="navbar2">
+        <h1>Livros disponíveis</h1>
+        {% load static %}
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+        <link rel="stylesheet" href="{% static 'css/livros.css' %}">
+        
     </div>
 
-</body>
-</html>
+    <div class="main-container">
+        {% if book_list %}
+        {% for book in book_list %}
+        <div class="card">
+            <div class="content">
+                <div class="title">{{ book.title }}</div>
+                {% if book.image %}
+                <img src="{{ book.image.url }}" alt="Capa de {{ book.title }}" class="book-cover">
+                {% else %}
+                <p>Sem imagem disponível</p>
+                {% endif %}
+                <div class="description">
+                    <p>{{ book.description }}</p>
+                    <p>Autor: {{ book.author }}</p>
+                </div>
+            </div>
+            <button>Reservar</button>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Não há livros na biblioteca.</p>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

@@ -3,21 +3,25 @@
 {% block content %}
 <h1>Meus Empréstimos</h1>
 
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/borrowed.css' %}">
+
 {% if borrowed_books %}
 <ul>
   {% for borrowed_book in borrowed_books %}
-  <p>Livro: {{ borrowed_book.book.title }}</p>
-  <p>Autor: {{ borrowed_book.book.author }}</p>
-  <p><strong>Data de Devolução:</strong> {{ borrowed_book.due_back|date:"d/m/Y" }}</p>
-  <p><strong>Renovação válida até:</strong> {{ borrowed_book.due_back|date:"d/m/Y" }}</p>
+  <li class="borrowed-item">
+    <p>Livro: {{ borrowed_book.book.title }}</p>
+    <p>Autor: {{ borrowed_book.book.author }}</p>
+    <p><strong>Data de Devolução:</strong> {{ borrowed_book.due_back|date:"d/m/Y" }}</p>
+    <p><strong>Renovação válida até:</strong> {{ borrowed_book.due_back|date:"d/m/Y" }}</p>
 
-  {% if borrowed_book.can_be_renewed %}
-  <a href="{% url 'renew-book' borrowed_book.id %}">Renovar Empréstimo</a>
-  {% else %}
-  <p>Este empréstimo não pode ser renovado.</p>
-  {% endif %}
+    {% if borrowed_book.can_be_renewed %}
+    <a href="{% url 'renew-book' borrowed_book.id %}" class="renew-link">Renovar Empréstimo</a>
+    {% else %}
+    <p>Este empréstimo não pode ser renovado.</p>
+    {% endif %}
+  </li>
   {% endfor %}
-
 </ul>
 {% else %}
 <p>Você não pegou nenhum livro emprestado.</p>

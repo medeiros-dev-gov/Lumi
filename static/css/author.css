@@ -1,0 +1,73 @@
+/* Estilo geral da página */
+body {
+    font-family: "Rasa", serif;
+    background-color: #f7f7f7; /* Cor de fundo neutra */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilo do container que envolve a lista de autores */
+.author-list-container {
+    width: 80%; /* Mantém a largura em 80% da página */
+    max-width: 800px; /* Aumenta a largura máxima da div quadrada */
+    margin: 0 auto; /* Centraliza o container na tela */
+    padding: 20px;
+    background-color: #fff; /* Cor de fundo da div */
+    border-radius: 10px; /* Bordas arredondadas */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Centraliza o título e outros conteúdos */
+}
+
+/* Título da página */
+.page-title {
+    font-size: 2.5rem; /* Aumenta o tamanho da fonte do título */
+    margin-bottom: 30px;
+    color: #3d5d8c;
+}
+
+/* Estilo do container de autores */
+.author-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Aumenta o tamanho dos cards */
+    gap: 20px;
+    justify-items: center; /* Centraliza os itens na grid */
+}
+
+/* Estilo do card de autor */
+.author-card {
+    background-color: #f0f4f8;
+    padding: 30px; /* Aumenta o padding para dar mais espaço dentro do card */
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center; /* Centraliza o conteúdo dentro do card */
+    max-width: 300px; /* Aumenta a largura máxima do card */
+}
+
+/* Efeito de hover nos cards */
+.author-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo do link do autor */
+.author-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.2rem; /* Aumenta o tamanho da fonte do nome do autor */
+    transition: color 0.3s ease;
+}
+
+/* Mudança de cor do link ao passar o mouse */
+.author-link:hover {
+    color: #3d5d8c;
+}
+
+/* Estilo para as datas de nascimento e falecimento */
+.author-dates {
+    font-size: 1rem; /* Aumenta o tamanho da fonte das datas */
+    color: #888;
+    margin-top: 10px;
+}

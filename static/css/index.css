@@ -1,14 +1,17 @@
+.background-container {
+    position: relative;
+    width: 100%;
+    height: 50vh; /* Alterei para 50% da altura da tela para diminuir mais */
+    overflow: hidden; /* Impede que a imagem ultrapasse os limites da div */
+}
+
 .background-image {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh; /* Garante que ocupe a altura inteira da tela */
-    z-index: -1; /* Coloca a imagem abaixo de todo o conteúdo */
-}
-
-.background-image img {
+    left: 50%;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Isso faz a imagem cobrir todo o espaço disponível sem distorção */
+    object-fit: cover; /* Faz a imagem cobrir o espaço sem distorcer */
+    transform: translateX(-50%); /* Centraliza horizontalmente */
+    z-index: -1; /* Coloca a imagem abaixo de outros elementos */
 }

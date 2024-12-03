@@ -1,39 +1,35 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-
-
-<div class="content">
+<div class="content2">
     <div class="navbar2">
         <h1>Livros disponíveis</h1>
         {% load static %}
-        {% load static %}
         <link rel="stylesheet" href="{% static 'css/styles.css' %}">
         <link rel="stylesheet" href="{% static 'css/livros.css' %}">
-        
     </div>
 
     <div class="main-container">
         {% if book_list %}
-        {% for book in book_list %}
-        <div class="card">
-            <div class="content">
-                <div class="title">{{ book.title }}</div>
-                {% if book.image %}
-                <img src="{{ book.image.url }}" alt="Capa de {{ book.title }}" class="book-cover">
-                {% else %}
-                <p>Sem imagem disponível</p>
-                {% endif %}
-                <div class="description">
-                    <p>{{ book.description }}</p>
-                    <p>Autor: {{ book.author }}</p>
+            {% for book in book_list %}
+                <div class="card">
+                    <div class="content">
+                        <div class="title">{{ book.title }}</div>
+                        {% if book.image %}
+                            <img src="{{ book.image.url }}" alt="Capa de {{ book.title }}" class="book-cover">
+                        {% else %}
+                            <p>Sem imagem disponível</p>
+                        {% endif %}
+                        <div class="description">
+                            <p>{{ book.description }}</p>
+                            <p>Autor: {{ book.author }}</p>
+                        </div>
+                    </div>
+                    <button class="reserve-btn">Reservar</button>
                 </div>
-            </div>
-            <button>Reservar</button>
-        </div>
-        {% endfor %}
+            {% endfor %}
         {% else %}
-        <p>Não há livros na biblioteca.</p>
+            <p>Não há livros na biblioteca.</p>
         {% endif %}
     </div>
 </div>

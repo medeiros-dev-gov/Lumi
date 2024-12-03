@@ -1,106 +1,215 @@
 /* Configuração Global */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: "Rasa", serif;
-    background-color: #fefefe;
-    color: #000;
-  }
-  
-  /* Estrutura Principal */
-  .main-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  /* Barra de Navegação */
-  .navbar2 {
-    background-color: #3d5d8c;
-    color: #fff;
-    font-size: xx-large;
-    border-radius: 80px;
-    padding: 45px;
-    margin-bottom: 20px;
-    text-decoration: none;
-  }
-  
-  /* Cards */
-  .card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    width: 300px;
-    padding: 20px;
-    background: #fff;
-    color: #000;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
-    margin-bottom: 20px;
-  }
-  
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  }
-  
-  .card .title {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  .card .description {
-    font-size: 1em;
-    color: rgba(0, 0, 0, 0.7);
-    margin: 10px 0;
-    text-align: justify;
-  }
-  
-  .card button {
-    background-color: #3d5d8c;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .card button:hover {
-    background-color: #2b455e;
-  }
-  
-  /* Imagem no Card */
-  img.book-cover {
-    width: 150px;
-    height: auto;
-    margin-bottom: 10px;
-    border-radius: 5px;
-  }
-  
-  /* Responsividade */
-  @media (max-width: 768px) {
-    .main-container {
-      padding: 10px;
-    }
-  
-    .card {
-      width: 100%;
-    }
-  
-    .navbar2 {
-      font-size: 1.5rem;
-    }
-  }
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Rasa", serif;
+  background-color: #fefefe;
+  color: #000;
+  overflow-x: hidden;
+}
+
+/* Estrutura Principal */
+.main-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  gap: 2px;
+  padding: 20px;
+}
+
+/* Barra de Navegação */
+.navbar2 {
+  background-color: #3d5d8c;
+  color: #fff;
+  font-size: xx-large;
+  border-radius: 80px;
+  padding: 45px;
+  padding-left: 1800px;
+  margin-bottom: 20px;
+  text-decoration: none;
+}
+
+.navbar2 h1 {
+  text-align: left;
+  margin-left: -1500px;
+}
+
+/* Cards */
+.card {
+  width: 200px; /* Largura fixa */
+  padding: 5px; /* Adiciona espaçamento interno */
+  border: 1px solid #ccc; /* Borda para destacar o card */
+  border-radius: 8px; /* Cantos arredondados */
+  overflow: hidden; /* Esconde conteúdo extra */
+  text-align: center; /* Centraliza o conteúdo */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra do card */
+  background-color: #fff; /* Fundo branco */
+  display: flex;
+  flex-direction: column; /* Organiza o conteúdo na vertical */
+  justify-content: space-between; /* Garante que o conteúdo tenha espaçamento adequado */
+  height: auto; /* Altura automática */
+}
+
+/* Imagens no Card */
+.card img {
+  width: 100%;
+  height: 200px; /* Definindo uma altura fixada para a imagem */
+  object-fit: cover; /* Preenche o espaço sem distorcer */
+  margin-bottom: 10px; /* Espaçamento entre imagem e título */
+  border-top-left-radius: 8px; /* Borda arredondada superior */
+  border-top-right-radius: 8px;
+}
+
+/* Estilo para título */
+.card h3 {
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+
+/* Descrição */
+.card p {
+  font-size: 1rem;
+  padding: 0 10px;
+  line-height: 1.4;
+  margin-bottom: 10px; /* Espaçamento entre parágrafo e botão */
+}
+
+/* Hover no Card */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Título do card */
+.card .title {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Descrição do card */
+.card .description {
+  font-size: 1em;
+  color: rgba(0, 0, 0, 0.7);
+  margin: 10px 0;
+  text-align: justify;
+}
+
+/* Botão */
+.card button {
+  background-color: #3d5d8c;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.card button:hover {
+  background-color: #2b455e;
+}
+
+/* Contêiner de Cards */
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Imagem do Livro */
+img.book-cover {
+  width: 200px;
+  height: auto;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+/* Estilo para a navbar */
+.navbar2 {
+  background-color: #3d5d8c;
+  padding: 20px;
+  text-align: center;
+  color: white;
+}
+
+.navbar2 h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+/* Estilo do container principal */
+.main-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Estilo do card do livro */
+.card {
+  background-color: #fff;
+  width: 280px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.05); /* Efeito de zoom */
+}
+
+.card .content {
+  padding: 20px;
+}
+
+.card .title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.card .book-cover {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.card .description {
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.card .reserve-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: #3d5d8c;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.card .reserve-btn:hover {
+  background-color: #2b456f;
+}
+
+/* Mensagem quando não há livros */
+p {
+  text-align: center;
+  font-size: 1.25rem;
+  color: #ffffff;
+}

@@ -1,20 +1,32 @@
-{% extends "base_generic.html" %}
 
-{% block content %}
-  <h1>Emprestar Livro</h1>
-  
-  <form method="post" action="{% url 'borrow-book' %}">
-    {% csrf_token %}
-    <label for="book">Escolha um livro:</label>
-    <select name="book" id="book" required>
-      {% for book in books %}
-        <option value="{{ book.id }}">{{ book.title }} ({{ book.author }})</option>
-      {% endfor %}
-    </select>
+    {% extends "base_generic.html" %}
 
-    <label for="due_back">Data de devolução:</label>
-    <input type="date" name="due_back" id="due_back" min="{{ date.today }}" required>
+    {% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/renew.css' %}">
+      <div class="full-container">
+        <div class="form-container">
+          <h1 class="borrow-title">Emprestar Livro</h1>
+          
+          <form method="post" action="{% url 'borrow-book' %}" class="borrow-form">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="book" class="form-label">Escolha um livro:</label>
+              <select name="book" id="book" class="form-control" required>
+                {% for book in books %}
+                  <option value="{{ book.id }}">{{ book.title }} ({{ book.author }})</option>
+                {% endfor %}
+              </select>
+            </div>
     
-    <button type="submit">Emprestar</button>
-  </form>
-{% endblock %}
+            <div class="form-group">
+              <label for="due_back" class="form-label">Data de devolução:</label>
+              <input type="date" name="due_back" id="due_back" class="form-control" min="{{ date.today }}" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Emprestar</button>
+          </form>
+        </div>
+      </div>
+    {% endblock %}
+    

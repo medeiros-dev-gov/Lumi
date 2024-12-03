@@ -36,7 +36,7 @@ from django.views import generic
 class BookListView(generic.ListView):
     """Generic class-based view for a list of books."""
     model = Book
-    paginate_by = 10
+    paginate_by = 12
 
 class BookDetailView(generic.DetailView):
     """Generic class-based detail view for a book."""
@@ -45,7 +45,7 @@ class BookDetailView(generic.DetailView):
 class AuthorListView(generic.ListView):
     """Generic class-based list view for a list of authors."""
     model = Author
-    paginate_by = 10
+    paginate_by = 12
 
 class AuthorDetailView(generic.DetailView):
     """Generic class-based detail view for an author."""
@@ -59,7 +59,7 @@ class GenreDetailView(generic.DetailView):
 class GenreListView(generic.ListView):
     """Generic class-based list view for a list of genres."""
     model = Genre
-    paginate_by = 10
+    paginate_by = 12
 
 class LanguageDetailView(generic.DetailView):
     """Generic class-based detail view for a genre."""
@@ -68,12 +68,12 @@ class LanguageDetailView(generic.DetailView):
 class LanguageListView(generic.ListView):
     """Generic class-based list view for a list of genres."""
     model = Language
-    paginate_by = 10
+    paginate_by = 12
 
 class BookInstanceListView(generic.ListView):
     """Generic class-based view for a list of books."""
     model = BookInstance
-    paginate_by = 10
+    paginate_by = 12
 
 class BookInstanceDetailView(generic.DetailView):
     """Generic class-based detail view for a book."""
@@ -85,7 +85,7 @@ class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
     """Generic class-based view listing books on loan to current user."""
     model = BookInstance
     template_name = 'catalog/bookinstance_list_borrowed_user.html'
-    paginate_by = 10
+    paginate_by = 12
 
     def get_queryset(self):
         return (
@@ -103,7 +103,7 @@ class LoanedBooksAllListView(PermissionRequiredMixin, generic.ListView):
     model = BookInstance
     permission_required = 'catalog.can_mark_returned'
     template_name = 'catalog/bookinstance_list_borrowed_all.html'
-    paginate_by = 10
+    paginate_by = 12
 
     def get_queryset(self):
         return BookInstance.objects.filter(status__exact='o').order_by('due_back')

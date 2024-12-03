@@ -1,0 +1,86 @@
+/* Estilo geral da página */
+body {
+    font-family: "Rasa", serif;
+    background-color: #f7f7f7; /* Cor de fundo neutra */
+    color: #333;
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Altura da tela */
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    text-align: center;
+}
+
+/* Estilo do formulário de login */
+form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px; /* Largura máxima do formulário */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Estilo das tabelas de formulário */
+table {
+    width: 100%;
+}
+
+/* Estilo das células da tabela */
+td {
+    padding: 10px;
+}
+
+/* Estilo dos campos de input */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+    font-size: 1rem;
+}
+
+/* Estilo do botão de submit */
+input[type="submit"] {
+    background-color: #3d5d8c;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 15px;
+}
+
+/* Mudança de cor do botão de submit ao passar o mouse */
+input[type="submit"]:hover {
+    background-color: #2a4378;
+}
+
+/* Estilo do link para recuperação de senha */
+p a {
+    color: #3d5d8c;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+/* Mudança de cor do link ao passar o mouse */
+p a:hover {
+    color: #2a4378;
+}
+
+/* Estilo das mensagens de erro */
+p {
+    color: red;
+    font-size: 1rem;
+}

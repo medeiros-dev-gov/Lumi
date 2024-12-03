@@ -1,23 +1,24 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+    <!-- Título da página -->
+    <h1 class="page-title">Lista de Gêneros</h1>
 
-<h1>Lista de Gêneros</h1>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/genre.css' %}">
 
-{% if genre_list %}
-  <ul>
-
-  {% for genre in genre_list %}
-    <li>
-      <a href="{{ genre.get_absolute_url }}">
-      {{ genre }}
-      </a>
-    </li>
-  {% endfor %}
-
- </ul>
-{% else %}
-  <p>Não há gêneros disponíveis.</p>
-{% endif %}
-
+    {% if genre_list %}
+        <!-- Container para os gêneros -->
+        <div class="genre-list-container">
+            {% for genre in genre_list %}
+                <div class="genre-card">
+                    <a href="{{ genre.get_absolute_url }}" class="genre-link">
+                        <h3>{{ genre }}</h3>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Não há gêneros disponíveis.</p>
+    {% endif %}
 {% endblock %}

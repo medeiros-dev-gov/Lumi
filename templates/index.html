@@ -1,6 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
 
 {% block content %}
 
@@ -9,16 +10,35 @@
 </div>
 
 <div class="background-container">
-    <!-- Logo Lumi -->
+    <!-- Imagem de Fundo -->
+    <img src="{% static 'img/barra.png' %}" alt="Imagem de Fundo" class="background-image">
+</div>
 
+<!-- Número de visitas -->
+<div class="visits">
+    <p>Você visitou esta página {{ num_visits }} vez{{ num_visits|pluralize }}.</p>
+</div>
 
-    <!-- Imagem de Fundo (ocupa praticamente a tela inteira) -->
-    <div class="background-image">
-        <img src="{% static 'img/barra.png' %}" alt="Imagem de Fundo">
-    </div>
+{% endblock %}
 
-    <!-- Número de visitas -->
-    <div class="visits">
-        <p>Você visitou esta página {{ num_visits }} vez{{ num_visits|pluralize }}.</p>
-    </div>
-    {% endblock %}
+<head>
+    <style>
+        .background-container {
+            position: relative;
+            width: 100%;
+            height: 50vh;  /* Ajuste para 50% da altura da tela */
+            overflow: hidden; /* Impede que a imagem ultrapasse os limites do container */
+        }
+
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 100%;
+            height: 50vh;  /* Ajusta a altura da imagem para 50% da altura da tela */
+            object-fit: cover; /* A imagem ocupa toda a área sem distorcer */
+            transform: translateX(-50%); /* Centraliza a imagem horizontalmente */
+            z-index: -1; /* Coloca a imagem abaixo do conteúdo */
+        }
+    </style>
+</head>

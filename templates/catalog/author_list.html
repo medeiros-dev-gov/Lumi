@@ -1,25 +1,35 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+    <!-- Título e Conteúdo Principal -->
+    <div class="author-list-container">
+        <h1 class="page-title">Author List</h1>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/author.css' %}">
 
-<h1>Author List</h1>
+        {% if author_list %}
+            <div class="author-container">
+                {% for author in author_list %}
+                    <div class="author-card">
+                        <a href="{{ author.get_absolute_url }}" class="author-link">
+                            <h3>{{ author }}</h3>
+                            <p class="author-dates">
+                                {{ author.date_of_birth }} - 
+                                {% if author.date_of_death %}{{ author.date_of_death }}{% else %}Present{% endif %}
+                            </p>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>There are no authors available.</p>
+        {% endif %}
+    </div>
+{% endblock %}
 
-{% if author_list %}
-  <ul>
-
-  {% for author in author_list %}
-    <li>
-      <a href="{{ author.get_absolute_url }}">
-      {{ author }} ({{author.date_of_birth}} - {% if author.date_of_death %}{{author.date_of_death}}{% endif %})
-      </a>
-    </li>
-  {% endfor %}
-
- </ul>
-{% else %}
-  <p>There are no authors available.</p>
-{% endif %}
-        
-        
-        
+{% block footer %}
+    <div class="footer">
+        <p>&copy; 2024 Your Library. All Rights Reserved.</p>
+        <a href="#">Contact Us</a> | <a href="#">Privacy Policy</a>
+    </div>
 {% endblock %}

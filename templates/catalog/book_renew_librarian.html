@@ -1,19 +1,22 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
-  <h1>Renovar Livro: {{ book_instance.book.title }}</h1>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/renew.css' %}">
+  <div class="container">
+    <h1 class="renewal-title">Renovar Livro: {{ book_instance.book.title }}</h1>
 
-  <p>Data de devolução atual: {{ book_instance.due_back }}</p>
+    <p class="due-date">Data de devolução atual: {{ book_instance.due_back }}</p>
 
-  <form method="post">
-    {% csrf_token %}
-    <div class="form-group">
-      <label for="renewal_date">Renewal Date:</label>
-      <input type="date" id="renewal_date" name="renewal_date" class="form-control" value="{{ form.renewal_date.value|date:'Y-m-d' }}" min="{{ today }}" max="{{ max_renewal_date }}">
-    </div>
-    <button type="submit" class="btn btn-primary">Renew</button>
-  </form>
-  
+    <form method="post" class="renewal-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="renewal_date">Data de Renovação:</label>
+        <input type="date" id="renewal_date" name="renewal_date" class="form-control" value="{{ form.renewal_date.value|date:'Y-m-d' }}" min="{{ today }}" max="{{ max_renewal_date }}">
+      </div>
+      <button type="submit" class="btn btn-primary submit-btn">Renovar</button>
+    </form>
 
-  <a href="{% url 'all-borrowed' %}">Voltar para a lista de livros emprestados</a>
+    <a href="{% url 'all-borrowed' %}" class="back-link">Voltar para a lista de livros emprestados</a>
+  </div>
 {% endblock %}

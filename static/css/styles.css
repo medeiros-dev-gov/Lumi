@@ -6,87 +6,178 @@
 }
 
 body {
-  font-family: "Rasa", serif;
-  background-color: rgb(254, 255, 255);
-  color: black;
-  min-height: 100vh; /* Faz a imagem ocupar toda a altura da tela */
-  overflow: hidden;
-}
-
-/* Definindo a imagem de fundo para ocupar toda a tela */
-body {
-  background-image: url("{% static 'img/barra.png' %}");
-  background-size: cover; /* Faz a imagem cobrir toda a área */
-  background-position: center center; /* Centraliza a imagem */
-  background-attachment: fixed; /* A imagem fica fixa enquanto o conteúdo rola */
-  min-height: 100vh; /* Garante que a imagem ocupe toda a altura da tela */
+  font-family: "Roboto", sans-serif;
+  background: linear-gradient(to right, #3d5d8c, #6fa8dc);
+  color: white;
+  min-height: 100vh;
 }
 
 /* Barra lateral fixa */
 .vertical-nav {
+  width: 0;
+  overflow-x: hidden;
   position: fixed;
-  top: 200px;
+  top: 80px;
   left: 0;
-  width: 250px;
   height: 100%;
-  z-index: 100;
+  background-color: rgba(58, 73, 105, 0.9); /* Fundo azul transparente */
+  transition: width 0.3s ease; /* Transição suave de largura */
+  z-index: 999; /* Garante que a barra lateral fique acima de outros elementos */
+}
+
+/* Quando a classe 'open' for adicionada, o menu se expande */
+.vertical-nav.open {
+  width: 250px;  /* Tamanho da barra lateral */
+}
+
+/* Estilo do botão de menu */
+/* Estilo do botão de menu */
+.menu-button {
+  display: inline-block;
+  background-color: #333;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  position: fixed; /* Posiciona o botão no topo */
+  top: 20px;
+  left: 20px;
+  z-index: 1000; /* Garante que o botão esteja acima de outros elementos */
+  transition: opacity 0.3s ease; /* Transição suave de opacidade */
+}
+
+/* Quando o menu estiver aberto, o botão de menu ficará transparente */
+.vertical-nav.open ~ .menu-button {
+  opacity: 0.3; /* Ajuste para a opacidade desejada */
+}
+
+
+/* Ajuste a posição do conteúdo principal */
+.content {
+  margin-left: 0;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
+  background-color: #f9f9f9;
+  color: #333;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: margin-left 0.3s ease;
 }
 
-.vertical-nav ul {
-  list-style-type: none;
-  padding: 0;
-  margin-left: -30px;
-  margin-top: 10px;
+/* Quando a barra lateral estiver aberta, o conteúdo principal desloca */
+.content2 {
+  margin-left: 250px; /* Para deslocar o conteúdo quando a barra lateral estiver aberta */
 }
 
-.vertical-nav li {
-  margin-bottom: 10px;
-}
-
-.vertical-nav a {
-  color: rgb(0, 0, 0);
-  text-decoration: none;
-  font-size: x-large;
-  padding: 10px;
-  display: block;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.vertical-nav a:hover {
-  background-color: #3d5d8c;
-  border-radius: 80px;
-  margin-left: 7px;
-}
-
-/* Estilo para a div principal que contém o fundo */
-.background-container {
-  position: relative;
+/* Fundo semi-transparente para o conteúdo quando o menu estiver aberto */
+.vertical-nav.open ~ .content::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  min-height: 100vh; /* Garante que a div ocupe toda a altura da tela */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: black;
-  padding: 20px;
-  z-index: 1;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Fundo escuro e semi-transparente */
+  z-index: 998; /* Faz com que o fundo fique atrás do conteúdo */
 }
 
-/* Logo Lumi */
-.logo img {
-  max-width: 250px; /* Limita o tamanho da logo */
-  margin-top: 50px;
+/* Barra lateral - Logo */
+.vertical-nav .logo img {
+  max-width: 200px;
   margin-bottom: 20px;
 }
 
-/* Estilo para o número de visitas */
-.visits p {
-  font-size: 1.5em;
-  font-weight: bold;
-  color: white; /* Coloca o texto em branco para melhor contraste */
+/* Lista de links da barra lateral */
+.vertical-nav ul {
+  list-style-type: none;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.vertical-nav li {
+  margin: 15px 0;
+}
+
+.vertical-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.2s;
+
+}
+
+.vertical-nav a i {
+  margin-right: 10px;
+  
+}
+
+.vertical-nav a:hover {
+  background-color: #1e3654;
+  transform: translateX(5px);
+}
+
+/* Conteúdo principal */
+.content {
+  padding: 20px;
+  background-color: #f9f9f9;
+  color: #333;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.content2 {
+  margin-left: 200px; /* Para evitar conflito visual com a barra lateral */
+  padding: 20px;
+  background-color: #ffffff; /* Fundo branco para destacar os elementos */
+  color: #333; /* Cor do texto */
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex; /* Para criar um layout flexível */
+  flex-wrap: wrap; /* Permitir que os itens "quebrem linha" */
+  gap: 20px; /* Espaçamento entre os itens */
+}
+
+/* Cards dos livros */
+.content2 .card {
+  background-color: #f4f4f4; /* Fundo neutro para os cards */
+  color: #333;
+  border-radius: 10px;
+  padding: 15px;
+  width: calc(33.33% - 80px); /* Cards ajustados para 3 por linha */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  text-align: center;
+  margin: 15px;
+}
+
+.content2 .card h3 {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #2b4a6f;
+}
+
+.content2 h1 {
+  font-size: 2.5rem;
+}
+
+.content2 .card p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Rodapé */
+.footer {
+  background-color: #2b4a6f;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }

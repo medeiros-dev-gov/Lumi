@@ -1,0 +1,74 @@
+/* Estilo geral da página */
+body {
+    font-family: "Rasa", serif;
+    background-color: #f7f7f7; /* Cor de fundo neutra */
+    color: #333;
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Altura da tela */
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    text-align: center;
+}
+
+/* Estilo do container que envolve a lista de gêneros */
+.genre-list-container {
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    width: 100%; /* Toma toda a largura */
+    height: 100%; /* Toma toda a altura */
+}
+
+/* Estilo do card de gênero */
+.genre-card {
+    background-color: #f0f4f8;
+    padding: 40px 30px; /* Aumenta o padding para dar mais espaço dentro do card */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center; /* Centraliza o conteúdo dentro do card */
+    max-width: 320px; /* Aumenta o tamanho máximo do card */
+    cursor: pointer;
+    position: relative;
+}
+
+/* Efeito de hover nos cards */
+.genre-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo do link do gênero */
+.genre-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    font-size: 1.4rem; /* Aumenta o tamanho da fonte do nome do gênero */
+    transition: color 0.3s ease, font-size 0.3s ease;
+}
+
+/* Mudança de cor e tamanho de fonte do link ao passar o mouse */
+.genre-link:hover {
+    color: #3d5d8c;
+    font-size: 1.6rem; /* Aumenta o tamanho do texto no hover */
+}
+
+/* Efeito visual adicional nos cards ao passar o mouse */
+.genre-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(61, 93, 140, 0.1);
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.genre-card:hover::after {
+    opacity: 1;
+}

@@ -23,6 +23,51 @@
   <p>The library has no copies of this book.</p>
 {% endfor %}
 </div>
+<section class="borrow-section">
+    <hr>
+
+    <h2>Emprestar este livro</h2>
+
+    {% if user.is_authenticated %}
+
+        {% if user_has_borrowed %}
+            <p>Você já possui um exemplar deste livro emprestado.</p>
+
+        {% elif book.available_copies > 0 %}
+            <p>Exemplares disponíveis: {{ book.available_copies }}</p>
+
+            <form method="post" action="{% url 'borrow-book' %}">
+                {% csrf_token %}
+
+                <input type="hidden" name="book" value="{{ book.id }}">
+
+                <label for="due_back">Data de devolução:</label>
+                <input
+                    type="date"
+                    name="due_back"
+                    id="due_back"
+                    min="{{ today|date:'Y-m-d' }}"
+                >
+
+                <button type="submit">Confirmar empréstimo</button>
+            </form>
+
+        {% else %}
+            <p>Este livro não está disponível no momento.</p>
+        {% endif %}
+
+    {% else %}
+
+        {% if book.available_copies > 0 %}
+            <p>Entre na sua conta para emprestar este livro.</p>
+            <a href="{% url 'login' %}?next={{ request.path }}">Entrar</a>
+        {% else %}
+            <p>Este livro não está disponível no momento.</p>
+        {% endif %}
+
+    {% endif %}
+</section>
+
 {% endblock %}
 
 

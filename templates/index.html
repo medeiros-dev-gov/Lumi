@@ -1,44 +1,328 @@
+
 {% extends "base_generic.html" %}
 
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% block title %}LUMI | Conhecimento que transforma{% endblock %}
 
 {% block content %}
 
-<div class="logo">
-    <img src="{% static 'img/lumi_logo_cortada.png' %}" alt="Logo Lumi">
-</div>
+<section class="hero">
+    <div class="hero-content">
+        <span class="hero-tag">SUA BIBLIOTECA DIGITAL</span>
 
-<div class="background-container">
-    <!-- Imagem de Fundo -->
-    <img src="{% static 'img/barra.png' %}" alt="Imagem de Fundo" class="background-image">
-</div>
+        <h1>
+            Um universo de conhecimento
+            <span>espera por você.</span>
+        </h1>
 
-<!-- Número de visitas -->
-<div class="visits">
-    <p>Você visitou esta página {{ num_visits }} vez{{ num_visits|pluralize }}.</p>
+        <p>
+            Descubra histórias, explore novos conhecimentos
+            e encontre sua próxima grande leitura.
+        </p>
+
+        <a href="{% url 'books' %}" class="hero-button">
+            Explorar biblioteca
+            <span>→</span>
+        </a>
+    </div>
+
+    <div class="hero-decoration">
+        <div class="decoration-circle"></div>
+        <div class="decoration-text">LUMI</div>
+        <span>LEIA · DESCUBRA · EVOLUA</span>
+    </div>
+</section>
+
+<section class="stats-section">
+
+    <div class="stats-heading">
+        <span>EM NOSSA BIBLIOTECA</span>
+        <h2>Conhecimento ao seu alcance</h2>
+    </div>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <span class="stat-number">{{ num_books }}</span>
+            <span class="stat-label">Livros cadastrados</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-number">{{ num_instances_available }}</span>
+            <span class="stat-label">Exemplares disponíveis</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-number">{{ num_authors }}</span>
+            <span class="stat-label">Autores</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-number">{{ num_instances }}</span>
+            <span class="stat-label">Exemplares no acervo</span>
+        </div>
+
+    </div>
+</section>
+
+<section class="discovery-section">
+
+    <div>
+        <span class="section-tag">SUA PRÓXIMA LEITURA</span>
+        <h2>Novas ideias começam com uma página.</h2>
+        <p>
+            Navegue pelo nosso catálogo e encontre livros
+            que podem inspirar sua próxima descoberta.
+        </p>
+    </div>
+
+    <a href="{% url 'books' %}" class="discovery-link">
+        Ver catálogo completo →
+    </a>
+
+</section>
+
+<div class="visit-counter">
+    Você já visitou a LUMI {{ num_visits }} vez{{ num_visits|pluralize }}.
 </div>
 
 {% endblock %}
 
-<head>
-    <style>
-        .background-container {
-            position: relative;
-            width: 100%;
-            height: 50vh;  /* Ajuste para 50% da altura da tela */
-            overflow: hidden; /* Impede que a imagem ultrapasse os limites do container */
-        }
+{% block extra_css %}
+<style>
+.hero {
+    min-height: 390px;
+    padding: 65px 55px;
+    background: #142338;
+    border-radius: 15px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 35px;
+    overflow: hidden;
+    position: relative;
+}
 
-        .background-image {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 100%;
-            height: 50vh;  /* Ajusta a altura da imagem para 50% da altura da tela */
-            object-fit: cover; /* A imagem ocupa toda a área sem distorcer */
-            transform: translateX(-50%); /* Centraliza a imagem horizontalmente */
-            z-index: -1; /* Coloca a imagem abaixo do conteúdo */
-        }
-    </style>
-</head>
+.hero-content {
+    max-width: 590px;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-tag,
+.section-tag,
+.stats-heading > span {
+    color: #c6a15b;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.hero h1 {
+    margin: 22px 0;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(35px, 5vw, 53px);
+    line-height: 1.15;
+    font-weight: 600;
+}
+
+.hero h1 span {
+    display: block;
+    color: #c6a15b;
+}
+
+.hero p {
+    max-width: 460px;
+    color: #d0d8e2;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.hero-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 25px;
+    margin-top: 30px;
+    padding: 15px 21px;
+    background: #c6a15b;
+    color: #142338;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.hero-button:hover {
+    background: white;
+    transform: translateY(-2px);
+}
+
+.hero-button span {
+    font-size: 20px;
+}
+
+.hero-decoration {
+    width: 290px;
+    height: 290px;
+    flex-shrink: 0;
+    border: 1px solid rgba(198, 161, 91, 0.35);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: #c6a15b;
+}
+
+.decoration-circle {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border: 1px solid rgba(198, 161, 91, 0.25);
+    border-radius: 50%;
+}
+
+.decoration-text {
+    font-family: "Playfair Display", serif;
+    font-size: 75px;
+    letter-spacing: 7px;
+}
+
+.hero-decoration span {
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+
+.stats-section {
+    padding: 65px 0 45px;
+}
+
+.stats-heading {
+    margin-bottom: 25px;
+}
+
+.stats-heading h2,
+.discovery-section h2 {
+    margin-top: 10px;
+    color: #142338;
+    font-family: "Playfair Display", serif;
+    font-size: 27px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 17px;
+}
+
+.stat-card {
+    padding: 25px 20px;
+    background: white;
+    border: 1px solid #e9e5dc;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-number {
+    color: #142338;
+    font-family: "Playfair Display", serif;
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.stat-label {
+    color: #718096;
+    font-size: 12px;
+}
+
+.discovery-section {
+    margin-top: 15px;
+    padding: 35px;
+    background: #eeeae1;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+}
+
+.discovery-section h2 {
+    max-width: 490px;
+}
+
+.discovery-section p {
+    margin-top: 12px;
+    color: #718096;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.discovery-link {
+    flex-shrink: 0;
+    color: #142338;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.discovery-link:hover {
+    color: #a78343;
+}
+
+.visit-counter {
+    margin-top: 30px;
+    color: #8993a0;
+    text-align: center;
+    font-size: 12px;
+}
+
+@media (max-width: 750px) {
+    .hero {
+        padding: 45px 28px;
+    }
+
+    .hero-decoration {
+        display: none;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .discovery-section {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 450px) {
+    .hero {
+        padding: 38px 22px;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .stats-grid {
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 18px 14px;
+    }
+
+    .stat-number {
+        font-size: 28px;
+    }
+
+    .discovery-section {
+        padding: 25px 20px;
+    }
+}
+</style>
+{% endblock %}

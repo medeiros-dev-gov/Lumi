@@ -1,6 +1,11 @@
-from uuid import UUID
+from django.utils import timezone
 from django.contrib import messages
-from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+from django.db import transaction
+from django.utils.dateparse import parse_date
+from .forms import UserRegisterForm
 
 # Create your views here.
 
@@ -33,15 +38,48 @@ def index(request):
 from django.views import generic
 
 
+
+from django.db.models import Count, Q
+
 class BookListView(generic.ListView):
-    """Generic class-based view for a list of books."""
+    """Lista livros com a quantidade de exemplares disponíveis."""
     model = Book
     paginate_by = 12
 
+    def get_queryset(self):
+        return Book.objects.annotate(
+            available_copies=Count(
+                'bookinstance',
+                filter=Q(bookinstance__status='a')
+            )
+        )
 class BookDetailView(generic.DetailView):
-    """Generic class-based detail view for a book."""
+    """Exibe os detalhes do livro e sua disponibilidade."""
     model = Book
 
+    def get_queryset(self):
+        return Book.objects.annotate(
+            available_copies=Count(
+                'bookinstance',
+                filter=Q(bookinstance__status='a')
+            )
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['today'] = timezone.localdate()
+
+        context['user_has_borrowed'] = (
+            self.request.user.is_authenticated
+            and BookInstance.objects.filter(
+                book=self.object,
+                borrower=self.request.user,
+                status='o'
+            ).exists()
+        )
+
+        return context
 class AuthorListView(generic.ListView):
     """Generic class-based list view for a list of authors."""
     model = Author
@@ -108,12 +146,11 @@ class LoanedBooksAllListView(PermissionRequiredMixin, generic.ListView):
     def get_queryset(self):
         return BookInstance.objects.filter(status__exact='o').order_by('due_back')
 
-from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 import datetime
 from django.contrib.auth.decorators import login_required, permission_required
-from catalog.forms import RenewBookForm
+from .forms import RenewBookForm
 from django.contrib import messages
 
 @login_required
@@ -264,63 +301,142 @@ class BookInstanceDelete(PermissionRequiredMixin, DeleteView):
 
 
 
+@login_required
+@require_POST
 def renew_book(request, pk):
-    try:
-        book_instance = BookInstance.objects.get(id=UUID(pk))
-    except BookInstance.DoesNotExist:
-        # Trate o erro aqui, se o livro não for encontrado
-        pass
-    # Continue o processamento...
-    book_instance = get_object_or_404(BookInstance, pk=pk)
-
-    # Verifica se o usuário tem permissão (opcional, mas recomendado)
-    if book_instance.borrower != request.user:
+    instance = get_object_or_404(BookInstance, pk=pk)
+    if instance.borrower_id != request.user.id:
         messages.error(request, "Você não tem permissão para renovar este livro.")
-        return redirect('my-borrowed')
-
-    # Verifica se o livro pode ser renovado
-    if book_instance.can_renew():
-        book_instance.renew()
-        messages.success(request, "Empréstimo renovado com sucesso!")
+    elif not instance.renew():
+        messages.error(request, "Este empréstimo não pode ser renovado (limite, status ou prazo).")
     else:
-        messages.error(request, "Você não pode renovar este livro. Limite de renovações atingido.")
-
-    # Redireciona para a página de livros emprestados
+        messages.success(request, "Empréstimo renovado por mais 7 dias.")
     return redirect('my-borrowed')
 
+
 @login_required
+@require_POST
 def borrow_book(request):
-    if request.method == 'POST':
-        book_id = request.POST.get('book')
-        due_back = request.POST.get('due_back')
-        
-        # Verifica se o livro existe e está disponível
-        book = get_object_or_404(Book, id=book_id)
-        book_instance = BookInstance.objects.filter(book=book, status='a').first()
+    book_id = request.POST.get('book')
+    due_back_raw = request.POST.get('due_back', '').strip()
+    due_back = parse_date(due_back_raw) if due_back_raw else None
 
-        if not book_instance:
-            messages.error(request, "Este livro não está disponível no momento.")
-            return redirect('borrow-book')
+    if due_back_raw and due_back is None:
+        messages.error(request, "Informe uma data de devolução válida.")
+        return redirect('books')
 
-        # Atualiza o status e associa ao usuário
-        book_instance.status = 'o'
-        book_instance.borrower = request.user
-        book_instance.due_back = due_back
-        book_instance.save()
+    book = get_object_or_404(Book, pk=book_id)
 
-        messages.success(request, f"Você emprestou o livro '{book.title}'!")
-        return redirect('my-borrowed')
-    
-    # Exibe os livros disponíveis
-    books = Book.objects.filter(bookinstance__status='a').distinct()
-    return render(request, 'catalog/borrow_book.html', {'books': books})
+    with transaction.atomic():
+
+        # Verifica se o usuário já possui este título emprestado
+        already_borrowed = BookInstance.objects.filter(
+            book=book,
+            borrower=request.user,
+            status='o'
+        ).exists()
+
+        if already_borrowed:
+            messages.error(
+                request,
+                f"Você já possui um exemplar de '{book.title}' emprestado."
+            )
+
+        else:
+            instance = BookInstance.objects.select_for_update().filter(
+                book=book,
+                status='a'
+            ).first()
+
+            if instance is None:
+                messages.error(
+                    request,
+                    "Este livro não está disponível no momento."
+                )
+
+            elif due_back and due_back < timezone.localdate():
+                messages.error(
+                    request,
+                    "A data de devolução não pode estar no passado."
+                )
+
+            elif instance.borrow(request.user, due_back=due_back):
+                messages.success(
+                    request,
+                    f"Você emprestou o livro '{book.title}'!"
+                )
+
+            else:
+                messages.error(
+                    request,
+                    "Não foi possível concluir o empréstimo."
+                )
+
+    return redirect('my-borrowed')
 
 
 @login_required
 def my_borrowed_books(request):
-    borrowed_books = BookInstance.objects.filter(borrower=request.user)
+    borrowed_books = BookInstance.objects.filter(
+        borrower=request.user,
+        status='o'
+    ).select_related('book').order_by('due_back')
+
+    return render(
+        request,
+        'catalog/my_borrowed_books.html',
+        {'borrowed_books': borrowed_books}
+    )
     return render(request, 'catalog/my_borrowed_books.html', {'borrowed_books': borrowed_books})
 
 def listar_livros(request):
     livros = Book.objects.all()  # Certifique-se de estar buscando todos os livros.
     return render(request, 'nome_do_template.html', {'livros': livros})
+
+
+
+@login_required
+@require_POST
+def return_book(request, pk):
+    with transaction.atomic():
+        instance = get_object_or_404(
+            BookInstance.objects.select_for_update(),
+            pk=pk,
+            borrower=request.user,
+            status='o'
+        )
+
+        instance.return_book()
+
+    messages.success(
+        request,
+        f"Você devolveu o livro '{instance.book.title}' com sucesso!"
+    )
+
+    return redirect('my-borrowed')
+
+
+def register(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+
+        if form.is_valid():
+            user = form.save()
+
+            messages.success(
+                request,
+                "Sua conta foi criada com sucesso! Faça login para acessar a biblioteca."
+            )
+
+            return redirect('login')
+    else:
+        form = UserRegisterForm()
+
+    return render(
+        request,
+        'registration/register.html',
+        {'form': form}
+    )

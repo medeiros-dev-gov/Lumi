@@ -1,29 +1,170 @@
 {% extends "base_generic.html" %}
+{% load static %}
 
 {% block content %}
-<h1>Meus Empréstimos</h1>
-
-{% load static %}
 <link rel="stylesheet" href="{% static 'css/borrowed.css' %}">
 
-{% if borrowed_books %}
-<ul>
-  {% for borrowed_book in borrowed_books %}
-  <li class="borrowed-item">
-    <p>Livro: {{ borrowed_book.book.title }}</p>
-    <p>Autor: {{ borrowed_book.book.author }}</p>
-    <p><strong>Data de Devolução:</strong> {{ borrowed_book.due_back|date:"d/m/Y" }}</p>
-    <p><strong>Renovação válida até:</strong> {{ borrowed_book.due_back|date:"d/m/Y" }}</p>
+<div class="library-dashboard">
 
-    {% if borrowed_book.can_be_renewed %}
-    <a href="{% url 'renew-book' borrowed_book.id %}" class="renew-link">Renovar Empréstimo</a>
-    {% else %}
-    <p>Este empréstimo não pode ser renovado.</p>
-    {% endif %}
-  </li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>Você não pegou nenhum livro emprestado.</p>
-{% endif %}
+  <header class="dashboard-header">
+    <div>
+      <span class="dashboard-label">MINHA BIBLIOTECA</span>
+      <h1>Meus empréstimos</h1>
+      <p>Acompanhe seus livros e prazos de devolução.</p>
+    </div>
+
+    <a href="{% url 'books' %}" class="explore-button">
+      + Explorar catálogo
+    </a>
+  </header>
+
+  {% if messages %}
+  <div class="messages-container">
+    {% for message in messages %}
+    <div class="system-message {{ message.tags }}">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if borrowed_books %}
+
+  <div class="books-grid">
+
+    {% for borrowed_book in borrowed_books %}
+
+    <article class="loan-card">
+
+      <div class="loan-card-top">
+
+        <div class="book-icon">📖</div>
+
+        {% if borrowed_book.is_overdue %}
+        <span class="status-badge overdue">
+          Atrasado
+        </span>
+        {% else %}
+        <span class="status-badge active">
+          Em dia
+        </span>
+        {% endif %}
+
+      </div>
+
+      <div class="book-information">
+
+        <h2>{{ borrowed_book.book.title }}</h2>
+
+        <p class="book-author">
+          {{ borrowed_book.book.author }}
+        </p>
+
+      </div>
+
+      <div class="loan-divider"></div>
+
+      <div class="due-information">
+
+        <div>
+          <span class="info-label">
+            DATA DE DEVOLUÇÃO
+          </span>
+
+          <strong class="due-date">
+            {{ borrowed_book.due_back|date:"d/m/Y" }}
+          </strong>
+        </div>
+
+        <div class="renewal-counter">
+          <span class="info-label">
+            RENOVAÇÕES
+          </span>
+
+          <strong>
+            {{ borrowed_book.renewal_count }}/3
+          </strong>
+        </div>
+
+      </div>
+
+      <p class="renewal-counter">
+        Renovações utilizadas: {{ borrowed_book.renewal_count }}/3
+      </p>
+
+      {% if borrowed_book.can_renew and not borrowed_book.is_overdue %}
+
+      <form method="post" action="{% url 'renew-book' borrowed_book.id %}">
+        {% csrf_token %}
+
+        <button type="submit" class="renew-button">
+          Renovar empréstimo
+          <span>→</span>
+        </button>
+      </form>
+
+
+      <form method="post" action="{% url 'return-book' borrowed_book.id %}" class="return-form"
+        onsubmit="return window.confirm('Tem certeza de que deseja devolver este livro?');">
+
+        {% csrf_token %}
+
+        <button type="submit" class="return-btn">
+          Devolver livro
+        </button>
+      </form>
+
+
+      <p class="renewal-note">
+        Você pode renovar este livro por mais 7 dias.
+      </p>
+
+      {% elif borrowed_book.renewal_count >= 3 %}
+
+      <div class="renewal-unavailable">
+        Limite de 3 renovações atingido.
+      </div>
+
+      {% elif borrowed_book.is_overdue %}
+
+      <div class="renewal-unavailable">
+        Este empréstimo está atrasado e não pode ser renovado.
+      </div>
+
+      {% else %}
+
+      <div class="renewal-unavailable">
+        Renovação indisponível para este empréstimo.
+      </div>
+
+      {% endif %}
+
+    </article>
+
+    {% endfor %}
+
+  </div>
+
+  {% else %}
+
+  <section class="empty-library">
+
+    <div class="empty-icon">📚</div>
+
+    <h2>Sua biblioteca está vazia</h2>
+
+    <p>
+      Você ainda não possui livros emprestados.
+      Que tal encontrar sua próxima leitura?
+    </p>
+
+    <a href="{% url 'books' %}" class="explore-button">
+      Explorar livros
+    </a>
+
+  </section>
+
+  {% endif %}
+
+</div>
 {% endblock %}

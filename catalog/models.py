@@ -1,16 +1,12 @@
-import datetime
-from pyexpat.errors import messages
+import uuid
+from datetime import timedelta
+from django.conf import settings
 from django.db import models
-from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
-from django.conf import settings  # Required to assign User as a borrower
-import uuid
-from datetime import date, timedelta, timezone
-from django.contrib.auth.models import User
+from django.urls import reverse
 from django.utils import timezone
-
+from django.conf import settings
 
 
 class Genre(models.Model):
@@ -25,6 +21,7 @@ class Genre(models.Model):
 
 
     class Meta:
+        ordering = ['name']
         constraints = [
             UniqueConstraint(
                 Lower('name'),
@@ -48,6 +45,7 @@ class Language(models.Model):
         return self.name
 
     class Meta:
+        ordering = ['name']
         constraints = [
             UniqueConstraint(
                 Lower('name'),
@@ -101,24 +99,7 @@ class Book(models.Model):
         return self.title
 
 class BookInstance(models.Model):
-    """Model representing a specific copy of a book that can be borrowed from the library."""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                          help_text="Unique ID for this particular book across the whole library")
-    book = models.ForeignKey(Book, on_delete=models.RESTRICT, null=True)
-    imprint = models.CharField(max_length=200)
-    due_back = models.DateField(null=True, blank=True)
-    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    status = models.CharField(
-        max_length=1,
-        choices=[
-            ('o', 'On loan'),
-            ('a', 'Available'),
-            ('r', 'Reserved'),
-        ],
-        blank=True,
-        default='a',
-    )
-
+    """Exemplar individual de um livro disponível para empréstimo."""
     LOAN_STATUS = (
         ('d', 'Maintenance'),
         ('o', 'On loan'),
@@ -126,22 +107,54 @@ class BookInstance(models.Model):
         ('r', 'Reserved'),
     )
 
-    status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='d', help_text='Book availability')
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        help_text="Identificador único deste exemplar",
+    )
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.RESTRICT,
+        null=True,
+        blank=True,
+    )
+    imprint = models.CharField(max_length=200)
+    due_back = models.DateField(null=True, blank=True)
+    borrower = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    status = models.CharField(
+        max_length=1,
+        choices=LOAN_STATUS,
+        default='a',
+        help_text='Disponibilidade do exemplar',
+    )
+    renewal_count = models.PositiveIntegerField(default=0)
 
     class Meta:
         ordering = ['due_back']
         permissions = (("can_mark_returned", "Set book as returned"),)
 
-    def renew(self):
-        """Renews the book loan, extending the due date by 7 days."""
-        if self.status == 'o':
-            self.due_back = timezone.now().date() + timedelta(days=7)
-            self.save()
+    def renew(self, days=7, max_renewals=3):
+        """Renova empréstimo ativo, respeitando limite e vencimento."""
+        if self.status != 'o' or not self.borrower:
+            return False
+        if self.renewal_count >= max_renewals:
+            return False
+        today = timezone.localdate()
+        if not self.due_back or self.due_back < today:
+            return False
+        self.due_back = max(self.due_back, today) + timedelta(days=days)
+        self.renewal_count += 1
+        self.save(update_fields=['due_back', 'renewal_count'])
+        return True
 
     @property
     def is_overdue(self):
-        """Checks if the book is overdue based on its due date."""
-        return bool(self.due_back and date.today() > self.due_back)
+        return bool(self.due_back and timezone.localdate() > self.due_back)
 
     def get_absolute_url(self):
         return reverse('bookinstance-detail', args=[str(self.id)])
@@ -149,53 +162,47 @@ class BookInstance(models.Model):
     def __str__(self):
         return f'{self.id} ({self.book.title})'
 
-    def borrow(self, user):
-        """Loans the book to a user."""
-        if self.status == 'a':  # Only loan if available
-            self.status = 'o'  # Marks as loaned
-            self.borrower = user
-            self.due_back = timezone.now().date() + timedelta(weeks=2)  # Sets due date
-            self.save()
+    def borrow(self, user, due_back=None):
+        """Empresta exemplar disponível; retorna False se indisponível."""
+        if self.status != 'a':
+            return False
+        self.status = 'o'
+        self.borrower = user
+        self.due_back = due_back or (timezone.localdate() + timedelta(weeks=2))
+        self.renewal_count = 0
+        self.save(update_fields=['status', 'borrower', 'due_back', 'renewal_count'])
+        return True
 
     def return_book(self):
-        """Returns the book, making it available again."""
-        if self.status == 'o':  # Only return if loaned
-            self.status = 'a'  # Marks as available
-            self.borrower = None
-            self.due_back = None
-            self.save()
-    
-    renewal_count = models.PositiveIntegerField(default=0)
-    
-    def can_renew(self):
-        return self.renewal_count < 3 
-    
-    def can_be_renewed(self):
-        if not self.due_back:  # Check if 'due_back' is None
-            return False  # If it's None, we can't renew it
-    
-    # If due_back is not None, continue with your logic
-        return self.due_back > timezone.now().date()  # Use timezone.now().date() instead of datetime.now()
+        """Registra devolução de exemplar emprestado."""
+        if self.status != 'o':
+            return False
+        self.status = 'a'
+        self.borrower = None
+        self.due_back = None
+        self.renewal_count = 0
+        self.save(update_fields=['status', 'borrower', 'due_back', 'renewal_count'])
+        return True
 
-def renew_book(request, pk):
-    """Renews the loan of a specific book."""
-    book_instance = get_object_or_404(BookInstance, pk=pk)
-    
-    # Verifica se o usuário tem permissão (opcional, mas recomendado)
-    if book_instance.borrower != request.user:
-        messages.error(request, "Você não tem permissão para renovar este livro.")
-        return redirect('my-borrowed')
-    
-    # Renova o empréstimo
-    book_instance.renew()
-    messages.success(request, "Empréstimo renovado com sucesso!")
-    
-    # Redireciona para a página de livros emprestados
-    return redirect('my-borrowed')
+    def can_renew(self):
+        return bool(
+            self.status == 'o'
+            and self.borrower_id
+            and self.due_back
+            and self.due_back >= timezone.localdate()
+            and self.renewal_count < 3
+        )
+
+    def can_be_renewed(self):
+        return self.can_renew()
 
 
 class BorrowedBook(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="borrowed_books")
+    user = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name="borrowed_books"
+)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     borrowed_date = models.DateTimeField(auto_now_add=True)
     return_date = models.DateTimeField(null=True, blank=True)

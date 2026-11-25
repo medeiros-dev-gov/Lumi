@@ -1,0 +1,31 @@
+﻿# Ambiente virtual
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.log
+local_settings.py
+
+# Banco de dados local
+db.sqlite3
+
+# Variáveis de ambiente
+.env
+
+# IDEs e editores
+.vscode/
+.idea/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Backups locais do projeto
+backup_projeto_antigo/
+db_backup_*.sqlite3
+inventario_projeto.csv

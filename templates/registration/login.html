@@ -1,41 +1,196 @@
+
 {% extends "base_generic.html" %}
+{% load static %}
+
+{% block title %}Entrar | LLUMI{% endblock %}
 
 {% block content %}
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+<style>
+    .login-page {
+        min-height: 75vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 35px 16px;
+    }
 
-{% if next %}
-{% if user.is_authenticated %}
-<p>Your account doesn't have access to this page. To proceed,
-  please login with an account that has access.</p>
-{% else %}
-<p>Please login to see this page.</p>
-{% endif %}
-{% endif %}
+    .login-card {
+        width: 100%;
+        max-width: 440px;
+        padding: 40px;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 15px 45px rgba(15, 35, 65, .10);
+    }
 
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/login.css' %}">
+    .login-icon {
+        width: 62px;
+        height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 18px;
+        border-radius: 17px;
+        background: #142b4a;
+        color: #e7bd63;
+        font-size: 30px;
+    }
 
+    .login-card h1 {
+        color: #142b4a;
+        text-align: center;
+        font-size: 27px;
+        margin-bottom: 9px;
+    }
 
+    .login-subtitle {
+        color: #7b8492;
+        text-align: center;
+        font-size: 14px;
+        margin-bottom: 28px;
+    }
 
-<form method="post" action="{% url 'login' %}">
-  {% csrf_token %}
-  <table>
-    <tr>
-      <td>{{ form.username.label_tag }}</td>
-      <td>{{ form.username }}</td>
-    </tr>
-    <tr>
-      <td>{{ form.password.label_tag }}</td>
-      <td>{{ form.password }}</td>
-    </tr>
-  </table>
-  <input type="submit" value="login" />
-  <input type="hidden" name="next" value="{{ next }}" />
-</form>
+    .login-field {
+        margin-bottom: 19px;
+    }
 
-{# Assumes you set up the password_reset view in your URLconf #}
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+    .login-field label {
+        display: block;
+        color: #29374b;
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
 
+    .login-field input {
+        width: 100%;
+        padding: 13px 14px;
+        border: 1px solid #dce2ea;
+        border-radius: 9px;
+        font-size: 15px;
+        box-sizing: border-box;
+    }
+
+    .login-field input:focus {
+        outline: none;
+        border-color: #c39b45;
+        box-shadow: 0 0 0 3px rgba(195, 155, 69, .12);
+    }
+
+    .login-error {
+        padding: 12px;
+        margin-bottom: 18px;
+        background: #fff0ef;
+        border: 1px solid #f3c6c2;
+        border-radius: 8px;
+        color: #a93226;
+        font-size: 13px;
+    }
+
+    .login-button {
+        width: 100%;
+        padding: 15px;
+        margin-top: 8px;
+        border: none;
+        border-radius: 9px;
+        background: #c39b45;
+        color: #fff;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .login-button:hover {
+        background: #ad8534;
+    }
+
+    .login-links {
+        margin-top: 24px;
+        text-align: center;
+        color: #7b8492;
+        font-size: 14px;
+        line-height: 2;
+    }
+
+    .login-links a {
+        color: #ad8534;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .login-links a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+        .login-card {
+            padding: 30px 23px;
+        }
+    }
+</style>
+
+<div class="login-page">
+    <div class="login-card">
+
+        <div class="login-icon">📚</div>
+
+        <h1>Bem-vindo de volta!</h1>
+
+        <p class="login-subtitle">
+            Entre na sua conta para acessar a biblioteca.
+        </p>
+
+        {% if form.errors %}
+            <div class="login-error">
+                Usuário ou senha incorretos. Verifique seus dados e tente novamente.
+            </div>
+        {% endif %}
+
+        {% if next and user.is_authenticated %}
+            <div class="login-error">
+                Sua conta não tem acesso a esta página.
+            </div>
+        {% elif next %}
+            <div class="login-error">
+                Faça login para acessar esta página.
+            </div>
+        {% endif %}
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="login-error">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <input type="hidden" name="next" value="{{ next|default:'' }}">
+
+            <div class="login-field">
+                <label for="{{ form.username.id_for_label }}">Nome de usuário</label>
+                {{ form.username }}
+                {{ form.username.errors }}
+            </div>
+
+            <div class="login-field">
+                <label for="{{ form.password.id_for_label }}">Senha</label>
+                {{ form.password }}
+                {{ form.password.errors }}
+            </div>
+
+            <button type="submit" class="login-button">
+                Entrar na biblioteca
+            </button>
+        </form>
+
+        <div class="login-links">
+            <a href="{% url 'password_reset' %}">Esqueci minha senha</a>
+            <br>
+            Ainda não possui uma conta?
+            <a href="{% url 'register' %}">Criar minha conta</a>
+        </div>
+
+    </div>
+</div>
 {% endblock %}
